@@ -28,7 +28,9 @@ namespace PublicIPReportService
 
         protected override void OnStart(string[] args)
         {
+            IPLog.Clear();
             IPLog.WriteEntry("IP report service start!");
+            eID = IPLog.Entries.Count;
             System.Timers.Timer timer = new System.Timers.Timer();
             timer.Interval = 30000;
             timer.Elapsed += new System.Timers.ElapsedEventHandler(getIPAsync);
@@ -37,14 +39,18 @@ namespace PublicIPReportService
 
         protected override void OnStop()
         {
+            IPLog.WriteEntry(IPLog.Entries[eID].Message, EventLogEntryType.Warning, (int)IPLog.Entries[eID].InstanceId);
+            //IPLog.Clear();
             IPLog.WriteEntry("IP report service stop!");
         }
 
-        private int eID = 1;
+        private int eID = 0;
 
         public async void getIPAsync(object sender, System.Timers.ElapsedEventArgs args)
         {
             var client = new HttpClient();
+
+            eID = IPLog.Entries.Count;
 
             HttpResponseMessage response = await client.GetAsync("https://api.ipify.org?format=json");
             HttpContent responseContent = response.Content;
@@ -53,7 +59,12 @@ namespace PublicIPReportService
             using (var reader = new StreamReader(await responseContent.ReadAsStreamAsync()))
             {
                 // Write the output.
-                IPLog.WriteEntry(await reader.ReadToEndAsync(), EventLogEntryType.Information, eID++);
+                string result = await reader.ReadToEndAsync();
+                result = result.Split('\"')[3];
+                if (IPLog.Entries[eID-1].Message != result) {
+                    IPLog.WriteEntry(result, EventLogEntryType.Information, eID);
+                }
+                
             }
         }
     }
