@@ -42,6 +42,7 @@
             this.serviceInstaller1.Description = "This service is used to report public ip of current device.";
             this.serviceInstaller1.DisplayName = "IP Report Service";
             this.serviceInstaller1.ServiceName = "PublicIPReport";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
             // 
             // ProjectInstaller
             // 
