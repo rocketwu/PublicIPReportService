@@ -41,7 +41,7 @@
             // 
             this.serviceInstaller1.Description = "This service is used to report public ip of current device.";
             this.serviceInstaller1.DisplayName = "IP Report Service";
-            this.serviceInstaller1.ServiceName = "Service1";
+            this.serviceInstaller1.ServiceName = "PublicIPReport";
             // 
             // ProjectInstaller
             // 

@@ -17,7 +17,7 @@ namespace PublicIPReportService
             ServiceBase[] ServicesToRun;
             ServicesToRun = new ServiceBase[]
             {
-                new Service1()
+                new PublicIPReport()
             };
             ServiceBase.Run(ServicesToRun);
         }

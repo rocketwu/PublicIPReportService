@@ -1,6 +1,6 @@
 ﻿namespace PublicIPReportService
 {
-    partial class Service1
+    partial class PublicIPReport
     {
         /// <summary> 
         /// 必需的设计器变量。
