@@ -40,10 +40,11 @@ namespace PublicIPReportService
         {
             IPLog.Clear();  //clear previous event
             IPLog.WriteEntry("IP report service start!");
+            getIPAsync(null, null);
 
             //set a timer for fetching public ip address
             System.Timers.Timer timer = new System.Timers.Timer();
-            timer.Interval = 30000;     //set the time interval (ms)
+            timer.Interval = 20*60000;     //set the time interval (ms)
             timer.Elapsed += new System.Timers.ElapsedEventHandler(getIPAsync);     //set the event handler when the count down finished. 
             timer.Start();
         }
