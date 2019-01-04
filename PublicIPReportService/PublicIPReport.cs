@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
-using System.Linq;
 using System.Net.Http;
+using System.Net.Mail;
 using System.ServiceProcess;
-using System.Text;
-using System.Threading.Tasks;
+using System.Net;
 
 namespace PublicIPReportService
 {
@@ -23,6 +18,9 @@ namespace PublicIPReportService
             //the index of the latest event entry
             get { return eID - 1; }
         }
+
+        private string mailAddr = "";   //TODO: FILL IN THE MAIL ADDRESS
+        private string mailPass = "";   //TODO: FILL IN THE PASSWORD
 
         public PublicIPReport()
         {
@@ -74,7 +72,20 @@ namespace PublicIPReportService
                 if (IPLog.Entries[eIndex].Message != result) {
                     //when the ip changes, do ...
                     IPLog.WriteEntry(result, EventLogEntryType.Information, eID);   //log the new ip address
-                    //TODO: notify method
+                    //TODO: notify method                    
+                    MailAddress from = new MailAddress(mailAddr, "IP Reporter");
+                    MailAddress to = new MailAddress(mailAddr);
+
+                    SmtpClient mailClient = new SmtpClient("smtp.gmail.com", 587);
+                    mailClient.EnableSsl = true;
+                    mailClient.Credentials = new NetworkCredential(from.Address, mailPass);
+
+                    MailMessage message = new MailMessage(from, to);
+                    message.Body = "Your new public IP address is: \n " + result;
+                    message.Subject = "IP address changed";
+
+                    mailClient.Send(message);
+                    
                 }
                 
             }
